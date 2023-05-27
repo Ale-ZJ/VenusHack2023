@@ -5,24 +5,26 @@ const resetBtn = document.querySelector("#resetBtn");
 const gameWidth = gameBoard.width;
 const gameHeight = gameBoard.height;
 const boardBackground = "lightgreen";
-const snakeColor = "yellow";
-const snakeBorder = "black";
-const foodColor = "lightpink";
+const snakeColor = "yellow"; // change to bee, might be deleted
+const snakeBorder = "black"; // change to bee, might be deleted
+const foodColor = "lightpink"; // change to a flower stem
 const unitSize = 25;
-let running = false;
+let running = false;    // for keeping track of end-game
+let flower = false;     // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
 let xVelocity = 0;
 let yVelocity = 0;
 let foodX;
 let foodY;
-let score = 0;
+let score = 0;          // for total letter found
+let womenFound = 0;     // for the total names of women found
 let snake = [
     {x:unitSize * 4, y:0},
     {x:unitSize * 3, y:0},
     {x:unitSize * 2, y:0},
     {x:unitSize, y:0},
     {x:0, y:0}
-];
+]; // not a snake
 
 window.addEventListener("keydown", changeDirection);
 resetBtn.addEventListener("click", resetGame);
@@ -41,22 +43,25 @@ function gameStart(){
 function nextTick(){
     if(running){
         setTimeout(()=>{
-            clearBoard();
-            drawFood();
-            moveSnake();
-            drawSnake();
-            checkGameOver();
-            nextTick();
+        clearBoard();
+        drawFood();         // draw letter
+        moveSnake();        // move bee in the grid
+        drawSnake();        // draw bee 
+        checkGameOver();    // bee hits a border or name is completed
+        nextTick();
         }, 75);
     }
     else{
         displayGameOver();
     }
 };
+
 function clearBoard(){
     ctx.fillStyle = boardBackground;
     ctx.fillRect(0, 0, gameWidth, gameHeight);
 };
+
+// TODO: change to create letter
 function createFood(){
     function randomFood(min, max){
         const randNum = Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize;
@@ -65,10 +70,14 @@ function createFood(){
     foodX = randomFood(0, gameWidth - unitSize);
     foodY = randomFood(0, gameWidth - unitSize);
 };
+
+// TODO: change to draw letter
 function drawFood(){
     ctx.fillStyle = foodColor;
     ctx.fillRect(foodX, foodY, unitSize, unitSize);
 };
+
+// TODO: move bee(s)
 function moveSnake(){
     const head = {x: snake[0].x + xVelocity,
                   y: snake[0].y + yVelocity};
@@ -84,6 +93,8 @@ function moveSnake(){
         snake.pop();
     }     
 };
+
+// TODO: draw bee(s) by inserting an image?
 function drawSnake(){
     ctx.fillStyle = snakeColor;
     ctx.strokeStyle = snakeBorder;
@@ -92,6 +103,8 @@ function drawSnake(){
         ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
     })
 };
+
+
 function changeDirection(event){
     const keyPressed = event.keyCode;
     firstMove? false : true;
@@ -124,6 +137,8 @@ function changeDirection(event){
             break;
     }
 };
+
+// TODO: remember to change the var from snake to bee
 function checkGameOver(){
     switch(true){
         case (snake[0].x < 0):
@@ -147,6 +162,7 @@ function checkGameOver(){
         }
     }
 };
+
 function displayGameOver(){
     ctx.font = "50px MV Boli";
     ctx.fillStyle = "black";
@@ -154,6 +170,7 @@ function displayGameOver(){
     ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
     running = false;
 };
+
 function resetGame(){
     score = 0;
     xVelocity = unitSize;
@@ -167,3 +184,57 @@ function resetGame(){
     ];
     gameStart();
 };
+
+// TODO: function to check whenever a name has been completed
+// function checkStems() {
+// }
+
+// TODO: function to display the information of a women in stem
+// function displayWomenInSTEM(){
+// }
+
+
+function _generateRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// loads a women's information into bee.js 
+function loadWomenInfo() {
+    id = generateRandomNumber(1,36);
+
+    // load the json file
+    fetch('techwomen.json')
+        .then(data => {
+            const flowerInfo = document.getElementById('flowerResult')
+
+            // search json file for a given women in stem
+            const flower = data.filter(item => item.id == id);
+
+            // clear previous results
+            flowerInfo.innerHTML = '';
+
+            // display flower information
+            if (flower.length === 0) {
+                searchResults.innerHTML = 'No results found.';
+            } else {
+                const resultElement = document.createElement('div');
+    
+                const womenName = document.createElement('h3');
+                womenName.textContent = flower.name;
+                resultElement.appendChild(womenName);
+    
+                const womenKnownFor = document.createElement('p');
+                womenKnownFor.textContent = flower.known_for;
+                resultElement.appendChild(womenKnownFor);
+    
+                const womenSummary = document.createElement('p');
+                womenSummary.textContent = flower.Bio.Summary;
+                resultElement.appendChild(womenSummary);
+    
+                searchResults.appendChild(resultElement);
+            }
+
+        });
+
+
+}
