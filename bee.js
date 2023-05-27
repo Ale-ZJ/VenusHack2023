@@ -55,7 +55,6 @@ function nextTick(){
         displayGameOver();
     }
 };
-
 function clearBoard(){
     ctx.fillStyle = boardBackground;
     ctx.fillRect(0, 0, gameWidth, gameHeight);
@@ -162,7 +161,6 @@ function checkGameOver(){
         }
     }
 };
-
 function displayGameOver(){
     ctx.font = "50px MV Boli";
     ctx.fillStyle = "black";
