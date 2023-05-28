@@ -9,8 +9,8 @@ const snakeColor = "yellow"; // change to bee, might be deleted
 const snakeBorder = "black"; // change to bee, might be deleted
 const foodColor = "lightpink"; // change to a flower stem
 const unitSize = 25;
-let running = false;    // for keeping track of end-game
-let flower = false;     // for keeping track of finding all the letters of a women in STEM
+let running = false;     // for keeping track of end-game
+let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
 let xVelocity = 0;
 let yVelocity = 0;
@@ -167,7 +167,14 @@ function displayGameOver(){
     ctx.font = "50px MV Boli";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
-    ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
+    if (flowerFound) {
+        ctx.fillText("FLOWER FOUND!", gameWidth / 2, gameHeight / 2);
+        // how do i display women information only when end-game?
+    } 
+    else {
+        ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
+    }
+    
     running = false;
 };
 
@@ -198,6 +205,7 @@ function _generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+// TODO: the function filters the json but it does not store the information in the file yet!
 // loads a women's information into bee.js 
 function loadWomenInfo() {
     id = generateRandomNumber(1,36);
