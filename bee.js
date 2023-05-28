@@ -10,13 +10,14 @@ const gameHeight = gameBoard.height;
 const boardBackground = "lightgreen";
 const beeColor = "black";
 const beeBorder = "black";
-const foodColor = "lightpink";
+const foodColor = "yellow";
 const unitSize = 25;
 
 /* global variables for game logic */
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
+let paused = true;
 let xVelocity = 0;
 let yVelocity = 0;
 let foodX;
@@ -38,9 +39,10 @@ resetBtn.addEventListener("click", resetGame);
 gameStart();
 
 function gameStart(){
-    running = true;
+    running = true; 
+    paused = true;
     // load women information for the game
-    nameText.textContent = "hi"
+    nameText.textContent = "Start collecting letters!"
     createFood();
     drawFood();
     nextTick();
@@ -51,7 +53,9 @@ function nextTick(){
         setTimeout(()=>{
         clearBoard();
         drawFood();       // draw letter
-        moveBee();        // move bee in the grid
+        if (!paused) {
+            moveBee();
+        }       // move bee in the grid
         drawBee();        // draw bee 
         checkGameOver();  // bee hits a border or name is completed
         nextTick();
@@ -78,8 +82,17 @@ function createFood(){
 
 function drawFood(){ 
     ctx.fillStyle = foodColor;
-    ctx.fillRect(foodX, foodY, unitSize, unitSize);
-    ctx.font = "35px Chalkduster";
+    ctx.beginPath();
+    ctx.arc(foodX+unitSize/2, foodY+unitSize/2, 16, 0, Math.PI * 2, false);
+    ctx.strokeStyle = 'gold';
+    ctx.lineWidth = 3;
+    ctx.fillStyle = 'yellow';
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+    
+    //ctx.fillRect(foodX, foodY, unitSize, unitSize);
+    ctx.font = "25px Chalkduster";
     ctx.fillStyle = "black";
     ctx.fillText(womanName[currWomanNameIdx], foodX+12.5, foodY+25);
 };
@@ -151,6 +164,7 @@ function changeDirection(event){
     const UP = 38;
     const RIGHT = 39;
     const DOWN = 40;
+    const PAUSE = 32;
 
     const goingUp = (yVelocity == -unitSize);
     const goingDown = (yVelocity == unitSize);
@@ -158,21 +172,24 @@ function changeDirection(event){
     const goingLeft = (xVelocity == -unitSize);
 
     switch(true){
-        case(keyPressed == LEFT && !goingRight):
+        case(keyPressed == LEFT && !goingRight && !paused):
             xVelocity = -unitSize;
             yVelocity = 0;
             break;
-        case(keyPressed == UP && !goingDown):
+        case(keyPressed == UP && !goingDown && !paused):
             xVelocity = 0;
             yVelocity = -unitSize;
             break;
-        case(keyPressed == RIGHT && !goingLeft):
+        case(keyPressed == RIGHT && !goingLeft && !paused):
             xVelocity = unitSize;
             yVelocity = 0;
             break;
-        case(keyPressed == DOWN && !goingUp):
+        case(keyPressed == DOWN && !goingUp && !paused):
             xVelocity = 0;
             yVelocity = unitSize;
+            break;
+        case(keyPressed == PAUSE):
+            paused = paused? false : true;
             break;
     }
 };
@@ -234,6 +251,7 @@ function resetGame(){
         {x:unitSize, y:0},
         {x:0, y:0}
     ];
+    clearTimeout();
     gameStart();
 };
 
