@@ -1,19 +1,19 @@
+/* html variables */
 const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
 const nameText = document.querySelector("#name");
-//const scoreText = document.querySelector("#scoreText");
 const resetBtn = document.querySelector("#resetBtn");
+
+/* game board constants */
 const gameWidth = gameBoard.width;
 const gameHeight = gameBoard.height;
 const boardBackground = "lightgreen";
-const snakeColor = "black";
-const snakeBorder = "black";
+const beeColor = "black";
+const beeBorder = "black";
 const foodColor = "lightpink";
 const unitSize = 25;
-let running = false;     // for keeping track of end-game
-let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
-let running = false;    // for keeping track of end-game
-let flower = false;     // for keeping track of finding all the letters of a women in STEM
+
+/* global variables for game logic */
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
@@ -21,16 +21,16 @@ let xVelocity = 0;
 let yVelocity = 0;
 let foodX;
 let foodY;
-let score = 0;          // for total letter found
-let womenFound = 0;     // for the total names of women found
-let womanName = "";
-let snake = [
+let displayName = "";     // name displayed below game board
+let womanName = "Marie Curie";  // last name from json file loaded at beginning of game
+let currWomanNameIdx = 0; 
+let bee = [
     {x:unitSize * 4, y:0},
     {x:unitSize * 3, y:0},
     {x:unitSize * 2, y:0},
     {x:unitSize, y:0},
     {x:0, y:0}
-]; // not a snake
+]; 
 
 window.addEventListener("keydown", changeDirection);
 resetBtn.addEventListener("click", resetGame);
@@ -38,8 +38,8 @@ resetBtn.addEventListener("click", resetGame);
 gameStart();
 
 function gameStart(){
-    running= true;
-    // scoreText.textContent = score;
+    running = true;
+    // load women information for the game
     nameText.textContent = "hi"
     createFood();
     drawFood();
@@ -50,10 +50,10 @@ function nextTick(){
     if(running){
         setTimeout(()=>{
         clearBoard();
-        drawFood();         // draw letter
-        moveSnake();        // move bee in the grid
-        drawSnake();        // draw bee 
-        checkGameOver();    // bee hits a border or name is completed
+        drawFood();       // draw letter
+        moveBee();        // move bee in the grid
+        drawBee();        // draw bee 
+        checkGameOver();  // bee hits a border or name is completed
         nextTick();
         }, 75);
     }
@@ -81,60 +81,66 @@ function drawFood(){
     ctx.fillRect(foodX, foodY, unitSize, unitSize);
     ctx.font = "35px Chalkduster";
     ctx.fillStyle = "black";
-    ctx.fillText("A", foodX+12.5, foodY+25);
+    ctx.fillText(womanName[currWomanNameIdx], foodX+12.5, foodY+25);
 };
 
-function moveSnake(){
-    const head = {x: snake[0].x + xVelocity,
-                  y: snake[0].y + yVelocity};
+function moveBee(){
+    const head = {x: bee[0].x + xVelocity,
+                  y: bee[0].y + yVelocity};
     
-    snake.unshift(head);
+    bee.unshift(head);
     //if food is eaten
-    if(snake[0].x == foodX && snake[0].y == foodY){
-        womanName += "A";
-        nameText.textContent = womanName;
-        //score+=1;
-        //scoreText.textContent = score;
-        createFood();
+    if(bee[0].x == foodX && bee[0].y == foodY){
+        displayName += womanName[currWomanNameIdx];
+        nameText.textContent = displayName;
+        currWomanNameIdx += 1;
+        
+        // check if collected all letters
+        if (currWomanNameIdx == womanName.length) {
+            flowerFound = true;
+        }
+        else {
+            createFood();
+        }
     }
     else{
-        snake.pop();
+        bee.pop();
     }     
 };
 
 function drawBee(){
-    ctx.fillStyle = snakeColor;
-    ctx.strokeStyle = snakeBorder;
-    snake.forEach(snakePart => {
-        ctx.fillRect(snakePart.x+10, snakePart.y+10, unitSize-20, unitSize-20);
-        ctx.strokeRect(snakePart.x+10, snakePart.y+10, unitSize-20, unitSize-20);
+    ctx.fillStyle = beeColor;
+    ctx.strokeStyle = beeBorder;
+    bee.forEach(beePart => {
+        ctx.fillRect(beePart.x+10, beePart.y+10, unitSize-20, unitSize-20);
+        ctx.strokeRect(beePart.x+10, beePart.y+10, unitSize-20, unitSize-20);
     })
     
     if (yVelocity === 0) {
         ctx.fillStyle = "yellow";
-        ctx.fillRect(snake[0].x, snake[0].y+2.5, unitSize, unitSize-5);
+        ctx.fillRect(bee[0].x, bee[0].y+2.5, unitSize, unitSize-5);
         ctx.fillStyle = "black";
-        ctx.fillRect(snake[0].x+5, snake[0].y+2.5, 5, 20);
-        ctx.fillRect(snake[0].x+15, snake[0].y+2.5, 5, 20);
-        ctx.strokeRect(snake[0].x, snake[0].y+2.5, unitSize, unitSize-5);
+        ctx.fillRect(bee[0].x+5, bee[0].y+2.5, 5, 20);
+        ctx.fillRect(bee[0].x+15, bee[0].y+2.5, 5, 20);
+        ctx.strokeRect(bee[0].x, bee[0].y+2.5, unitSize, unitSize-5);
         ctx.fillStyle = "white";
-        ctx.fillRect(snake[0].x+10, snake[0].y-5, 8, 15);
-        ctx.strokeRect(snake[0].x+10, snake[0].y-5, 8, 15);
-        ctx.fillRect(snake[0].x+10, snake[0].y+17, 8, 15);
-        ctx.strokeRect(snake[0].x+10, snake[0].y+17, 8, 15);
+        ctx.fillRect(bee[0].x+10, bee[0].y-5, 8, 15);
+        ctx.strokeRect(bee[0].x+10, bee[0].y-5, 8, 15);
+        ctx.fillRect(bee[0].x+10, bee[0].y+17, 8, 15);
+        ctx.strokeRect(bee[0].x+10, bee[0].y+17, 8, 15);
     }
     else {
         ctx.fillStyle = "yellow";
-        ctx.fillRect(snake[0].x+2.5, snake[0].y, unitSize-5, unitSize);
+        ctx.fillRect(bee[0].x+2.5, bee[0].y, unitSize-5, unitSize);
         ctx.fillStyle = "black";
-        ctx.fillRect(snake[0].x+2.5, snake[0].y+5, 20, 5);
-        ctx.fillRect(snake[0].x+2.5, snake[0].y+15, 20, 5);
-        ctx.strokeRect(snake[0].x+2.5, snake[0].y, unitSize-5, unitSize);
+        ctx.fillRect(bee[0].x+2.5, bee[0].y+5, 20, 5);
+        ctx.fillRect(bee[0].x+2.5, bee[0].y+15, 20, 5);
+        ctx.strokeRect(bee[0].x+2.5, bee[0].y, unitSize-5, unitSize);
         ctx.fillStyle = "white";
-        ctx.fillRect(snake[0].x-5, snake[0].y+10, 15, 8);
-        ctx.strokeRect(snake[0].x-5, snake[0].y+10, 15, 8);
-        ctx.fillRect(snake[0].x+15, snake[0].y+10, 15, 8);
-        ctx.strokeRect(snake[0].x+15, snake[0].y+10, 15, 8);
+        ctx.fillRect(bee[0].x-5, bee[0].y+10, 15, 8);
+        ctx.strokeRect(bee[0].x-5, bee[0].y+10, 15, 8);
+        ctx.fillRect(bee[0].x+15, bee[0].y+10, 15, 8);
+        ctx.strokeRect(bee[0].x+15, bee[0].y+10, 15, 8);
     }
 };
 
@@ -171,27 +177,33 @@ function changeDirection(event){
     }
 };
 
-// TODO: remember to change the var from snake to bee
+
 function checkGameOver(){
     switch(true){
-        case (snake[0].x < 0):
+        case (bee[0].x < 0):
             running = false;
             break;
-        case (snake[0].x >= gameWidth):
+        case (bee[0].x >= gameWidth):
             running = false;
             break;
-        case (snake[0].y < 0):
+        case (bee[0].y < 0):
             running = false;
             break;
-        case (snake[0].y >= gameHeight):
+        case (bee[0].y >= gameHeight):
             running = false;
             break;
     }
+
     // games over if you bump into self
-    for(let i = 1; i < snake.length; i+=1){
-        if(snake[i].x == snake[0].x && snake[i].y == snake[0].y){
+    for(let i = 1; i < bee.length; i+=1){
+        if(bee[i].x == bee[0].x && bee[i].y == bee[0].y){
             running = false;
         }
+    }
+
+    // if flower found then congratulations!
+    if (flowerFound) {
+        running = false;
     }
 
 };
@@ -212,11 +224,10 @@ function displayGameOver(){
 };
 
 function resetGame(){
-    // score = 0;
-    womanName = ""
+    // loadWomenInfo() to change women name, known_for, summary
     xVelocity = unitSize;
     yVelocity = 0;
-    snake = [
+    bee = [
         {x:unitSize * 4, y:0},
         {x:unitSize * 3, y:0},
         {x:unitSize * 2, y:0},
@@ -226,20 +237,12 @@ function resetGame(){
     gameStart();
 };
 
-// TODO: function to check whenever a name has been completed
-// function checkStems() {
-// }
-
-// TODO: function to display the information of a women in stem
-// function displayWomenInSTEM(){
-// }
-
 
 function _generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// TODO: the function filters the json but it does not store the information in the file yet!
+// TODO: update the global variable for women information
 // loads a women's information into bee.js 
 function loadWomenInfo() {
     id = generateRandomNumber(1,36);
