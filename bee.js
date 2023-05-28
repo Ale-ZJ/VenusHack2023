@@ -9,13 +9,12 @@ const snakeColor = "yellow"; // change to bee, might be deleted
 const snakeBorder = "black"; // change to bee, might be deleted
 const foodColor = "lightpink"; // change to a flower stem
 const unitSize = 25;
-<<<<<<< HEAD
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
-=======
 let running = false;    // for keeping track of end-game
 let flower = false;     // for keeping track of finding all the letters of a women in STEM
->>>>>>> 2e8a390 (Add functions for game logic: loadWomenInfo)
+let running = false;     // for keeping track of end-game
+let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
 let xVelocity = 0;
 let yVelocity = 0;
