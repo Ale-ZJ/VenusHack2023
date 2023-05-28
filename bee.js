@@ -1,13 +1,14 @@
 const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
-const scoreText = document.querySelector("#scoreText");
+const nameText = document.querySelector("#name");
+//const scoreText = document.querySelector("#scoreText");
 const resetBtn = document.querySelector("#resetBtn");
 const gameWidth = gameBoard.width;
 const gameHeight = gameBoard.height;
 const boardBackground = "lightgreen";
-const snakeColor = "yellow"; // change to bee, might be deleted
-const snakeBorder = "black"; // change to bee, might be deleted
-const foodColor = "lightpink"; // change to a flower stem
+const snakeColor = "black";
+const snakeBorder = "black";
+const foodColor = "lightpink";
 const unitSize = 25;
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
@@ -22,6 +23,7 @@ let foodX;
 let foodY;
 let score = 0;          // for total letter found
 let womenFound = 0;     // for the total names of women found
+let womanName = "";
 let snake = [
     {x:unitSize * 4, y:0},
     {x:unitSize * 3, y:0},
@@ -37,8 +39,8 @@ gameStart();
 
 function gameStart(){
     running= true;
-    firstMove = true;
-    scoreText.textContent = score;
+    // scoreText.textContent = score;
+    nameText.textContent = "hi"
     createFood();
     drawFood();
     nextTick();
@@ -65,7 +67,6 @@ function clearBoard(){
     ctx.fillRect(0, 0, gameWidth, gameHeight);
 };
 
-// TODO: change to create letter
 function createFood(){
     function randomFood(min, max){
         const randNum = Math.round((Math.random() * (max - min) + min) / unitSize) * unitSize;
@@ -75,13 +76,14 @@ function createFood(){
     foodY = randomFood(0, gameWidth - unitSize);
 };
 
-// TODO: change to draw letter
-function drawFood(){
+function drawFood(){ 
     ctx.fillStyle = foodColor;
     ctx.fillRect(foodX, foodY, unitSize, unitSize);
+    ctx.font = "35px Chalkduster";
+    ctx.fillStyle = "black";
+    ctx.fillText("A", foodX+12.5, foodY+25);
 };
 
-// TODO: move bee(s)
 function moveSnake(){
     const head = {x: snake[0].x + xVelocity,
                   y: snake[0].y + yVelocity};
@@ -89,8 +91,10 @@ function moveSnake(){
     snake.unshift(head);
     //if food is eaten
     if(snake[0].x == foodX && snake[0].y == foodY){
-        score+=1;
-        scoreText.textContent = score;
+        womanName += "A";
+        nameText.textContent = womanName;
+        //score+=1;
+        //scoreText.textContent = score;
         createFood();
     }
     else{
@@ -98,20 +102,45 @@ function moveSnake(){
     }     
 };
 
-// TODO: draw bee(s) by inserting an image?
-function drawSnake(){
+function drawBee(){
     ctx.fillStyle = snakeColor;
     ctx.strokeStyle = snakeBorder;
     snake.forEach(snakePart => {
-        ctx.fillRect(snakePart.x, snakePart.y, unitSize, unitSize);
-        ctx.strokeRect(snakePart.x, snakePart.y, unitSize, unitSize);
+        ctx.fillRect(snakePart.x+10, snakePart.y+10, unitSize-20, unitSize-20);
+        ctx.strokeRect(snakePart.x+10, snakePart.y+10, unitSize-20, unitSize-20);
     })
+    
+    if (yVelocity === 0) {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(snake[0].x, snake[0].y+2.5, unitSize, unitSize-5);
+        ctx.fillStyle = "black";
+        ctx.fillRect(snake[0].x+5, snake[0].y+2.5, 5, 20);
+        ctx.fillRect(snake[0].x+15, snake[0].y+2.5, 5, 20);
+        ctx.strokeRect(snake[0].x, snake[0].y+2.5, unitSize, unitSize-5);
+        ctx.fillStyle = "white";
+        ctx.fillRect(snake[0].x+10, snake[0].y-5, 8, 15);
+        ctx.strokeRect(snake[0].x+10, snake[0].y-5, 8, 15);
+        ctx.fillRect(snake[0].x+10, snake[0].y+17, 8, 15);
+        ctx.strokeRect(snake[0].x+10, snake[0].y+17, 8, 15);
+    }
+    else {
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(snake[0].x+2.5, snake[0].y, unitSize-5, unitSize);
+        ctx.fillStyle = "black";
+        ctx.fillRect(snake[0].x+2.5, snake[0].y+5, 20, 5);
+        ctx.fillRect(snake[0].x+2.5, snake[0].y+15, 20, 5);
+        ctx.strokeRect(snake[0].x+2.5, snake[0].y, unitSize-5, unitSize);
+        ctx.fillStyle = "white";
+        ctx.fillRect(snake[0].x-5, snake[0].y+10, 15, 8);
+        ctx.strokeRect(snake[0].x-5, snake[0].y+10, 15, 8);
+        ctx.fillRect(snake[0].x+15, snake[0].y+10, 15, 8);
+        ctx.strokeRect(snake[0].x+15, snake[0].y+10, 15, 8);
+    }
 };
 
 
 function changeDirection(event){
     const keyPressed = event.keyCode;
-    firstMove? false : true;
     const LEFT = 37;
     const UP = 38;
     const RIGHT = 39;
@@ -155,16 +184,16 @@ function checkGameOver(){
             running = false;
             break;
         case (snake[0].y >= gameHeight):
-                running = false;
-                break;
+            running = false;
+            break;
     }
-    if (!firstMove) {
-        for(let i = 1; i < snake.length; i+=1){
-            if(snake[i].x == snake[0].x && snake[i].y == snake[0].y){
-                running = false;
-            }
+    // games over if you bump into self
+    for(let i = 1; i < snake.length; i+=1){
+        if(snake[i].x == snake[0].x && snake[i].y == snake[0].y){
+            running = false;
         }
     }
+
 };
 
 function displayGameOver(){
@@ -183,7 +212,8 @@ function displayGameOver(){
 };
 
 function resetGame(){
-    score = 0;
+    // score = 0;
+    womanName = ""
     xVelocity = unitSize;
     yVelocity = 0;
     snake = [
