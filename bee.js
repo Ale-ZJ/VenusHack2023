@@ -241,7 +241,6 @@ function loadWomenInfo() {
     
                 searchResults.appendChild(resultElement);
             }
-
         });
 
 
