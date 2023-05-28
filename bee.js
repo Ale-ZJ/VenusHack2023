@@ -24,7 +24,7 @@ const frameRate = 1000/10; // 60 frames per second
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let paused = true;
-let xVelocity = 25;         // the bee moves to the right at beginning of game
+let xVelocity = unitSize;         // the bee moves to the right at beginning of game
 let yVelocity = 0;
 let foodX;
 let foodY;
@@ -35,11 +35,11 @@ let womanSummary;
 let intervalTimerId;
 let currWomanNameIdx = 0; 
 let bee = [
-    {x:unitSize * 4, y:0},
-    {x:unitSize * 3, y:0},
-    {x:unitSize * 2, y:0},
-    {x:unitSize, y:0},
-    {x:0, y:0}
+    {x:unitSize * 4, y:unitSize*5},
+    {x:unitSize * 3, y:unitSize*5},
+    {x:unitSize * 2, y:unitSize*5},
+    {x:unitSize, y:unitSize*5},
+    {x:0, y:unitSize*5}
 ]; 
 
 window.addEventListener("keydown", changeDirection);
@@ -203,6 +203,7 @@ function changeDirection(event){
             paused = paused? false : true;
             break;
     }
+    clearTimeout();
 };
 
 
@@ -237,7 +238,7 @@ function checkGameOver(){
 };
 
 function displayGameOver(){
-    ctx.font = "50px MV Boli";
+    ctx.font = "50px Gill Sans";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     if (flowerFound) {
