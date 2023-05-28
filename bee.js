@@ -13,6 +13,9 @@ const beeBorder = "black";
 const foodColor = "lightpink";
 const unitSize = 25;
 
+/* Load JSON women in stem data to const variable */
+// const womenData = require('./techwomen.json');
+
 /* global variables for game logic */
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
@@ -22,7 +25,11 @@ let yVelocity = 0;
 let foodX;
 let foodY;
 let displayName = "";     // name displayed below game board
-let womanName = "Marie Curie";  // last name from json file loaded at beginning of game
+
+let womanName;  // last name from json file loaded at beginning of game
+let womanKownFor;
+let womanSummary;
+
 let currWomanNameIdx = 0; 
 let bee = [
     {x:unitSize * 4, y:0},
@@ -39,7 +46,7 @@ gameStart();
 
 function gameStart(){
     running = true;
-    // load women information for the game
+    loadWomenInfo();
     nameText.textContent = "hi"
     createFood();
     drawFood();
@@ -214,7 +221,6 @@ function displayGameOver(){
     ctx.textAlign = "center";
     if (flowerFound) {
         ctx.fillText("FLOWER FOUND!", gameWidth / 2, gameHeight / 2);
-        // how do i display women information only when end-game?
     } 
     else {
         ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
@@ -224,9 +230,11 @@ function displayGameOver(){
 };
 
 function resetGame(){
-    // loadWomenInfo() to change women name, known_for, summary
+    loadWomenInfo();
     xVelocity = unitSize;
     yVelocity = 0;
+    currWomanNameIdx = 0;
+    displayName = "";
     bee = [
         {x:unitSize * 4, y:0},
         {x:unitSize * 3, y:0},
@@ -237,26 +245,19 @@ function resetGame(){
     gameStart();
 };
 
-
 function _generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// TODO: update the global variable for women information
-// loads a women's information into bee.js 
 function loadWomenInfo() {
-    id = generateRandomNumber(1,36);
+    id = _generateRandomNumber(1, 36);
 
-    // load the json file
     fetch('techwomen.json')
-        .then(data => {
-            const flowerInfo = document.getElementById('flowerResult')
-
-            // search json file for a given women in stem
-            const flowers = data.filter(item => item.id == id);
-
-            
+        .then(response => response.json())
+        .then(womenData => {
+            const womanMatch = womenData.find(item => item.id === id);
+            womanName = womanMatch.name;
+            womanKownFor = womanMatch.known_for;
+            womanSummary = womanMatch.Bio.Summary;
         });
-
-
 }
