@@ -216,31 +216,9 @@ function loadWomenInfo() {
             const flowerInfo = document.getElementById('flowerResult')
 
             // search json file for a given women in stem
-            const flower = data.filter(item => item.id == id);
+            const flowers = data.filter(item => item.id == id);
 
-            // clear previous results
-            flowerInfo.innerHTML = '';
-
-            // display flower information
-            if (flower.length === 0) {
-                searchResults.innerHTML = 'No results found.';
-            } else {
-                const resultElement = document.createElement('div');
-    
-                const womenName = document.createElement('h3');
-                womenName.textContent = flower.name;
-                resultElement.appendChild(womenName);
-    
-                const womenKnownFor = document.createElement('p');
-                womenKnownFor.textContent = flower.known_for;
-                resultElement.appendChild(womenKnownFor);
-    
-                const womenSummary = document.createElement('p');
-                womenSummary.textContent = flower.Bio.Summary;
-                resultElement.appendChild(womenSummary);
-    
-                searchResults.appendChild(resultElement);
-            }
+            
         });
 
 
