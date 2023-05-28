@@ -1,7 +1,7 @@
 body {
 	margin:10px;
 	padding:0px;
-    background-color: #99EDC3;
+    background-color: cadetblue;
 }
 
 .titleBar {
@@ -11,9 +11,8 @@ body {
     z-index:10000;
     padding: 5px;
     background-color: beige;
-    border: 5px;
-    border-bottom-color: yellow;
     text-align: center;
+    position: relative;
 }
     
 #gameContainer{
@@ -21,18 +20,17 @@ body {
     border-radius: 15px;
     padding: 10px;
 }
+
 #gameBoard{
     border: 3px solid;
     border-radius: 15px;
 }
+
 #name{
     font-family: "Comic sans";
-    font-size: 100px;
+    font-size: 40px;
 }
-/* #scoreText{
-    font-family: "Comic sans";
-    font-size: 100px;
-} */
+
 #playBtn{
     font-family: "Tahoma";
     font-size: 22px;
