@@ -24,7 +24,7 @@ const frameRate = 1000/10; // 60 frames per second
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let paused = true;
-let xVelocity = 25;
+let xVelocity = unitSize;         // the bee moves to the right at beginning of game
 let yVelocity = 0;
 let foodX;
 let foodY;
@@ -48,13 +48,9 @@ playBtn.addEventListener("click", resetGame);
 gameStart();
 
 function gameStart(){
-    clearTimeout();
     running = true;
     paused = true;
-    //loadWomenInfo();
-    womanName="grl"
-    womanKownFor = "\t"+"Known for being girlboss";
-    womanSummary = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+    loadWomenInfo();
     nameText.textContent = "Start collecting letters!"
     clearBoard();
     createFood(); // initial letter
