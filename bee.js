@@ -30,7 +30,7 @@ let foodX;
 let foodY;
 let displayName = "";      // name displayed below game board
 let womanName;             // last name from json file loaded at beginning of game
-let womanKownFor;
+let womanKnownFor;
 let womanSummary;
 let intervalTimerId;
 let currWomanNameIdx = 0; 
@@ -246,7 +246,7 @@ function displayGameOver(){
     ctx.textAlign = "center";
     if (flowerFound) {
         ctx.fillText("FLOWER FOUND!", gameWidth / 2, gameHeight / 2);
-        knownForText.textContent = womanKownFor;
+        knownForText.textContent = womanKnownFor;
         summaryText.textContent = womanSummary;
     } 
     else {
@@ -262,6 +262,10 @@ function resetGame(){
     yVelocity = 0;
     currWomanNameIdx = 0;
     displayName = "";
+    womanKnownFor = "";
+    womanSummary = "";
+    knownForText.textContent = womanKnownFor;
+    summaryText.textContent = womanSummary;
     flowerFound = false;
     clearBoard();
     bee = [
@@ -287,7 +291,7 @@ function loadWomenInfo() {
             const womanMatch = womenData.find(item => item.id == randomId);
             
             womanName = womanMatch.name;
-            womanKownFor = womanMatch.known_for;
+            womanKnownFor = womanMatch.known_for;
             womanSummary = womanMatch.Bio.Summary;
         });
 }
