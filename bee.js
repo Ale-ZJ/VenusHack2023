@@ -1,9 +1,5 @@
 /**
- * features/issues:
- * - bee increases speed after button is pressed
- * - first few games are "janked"
- * - add flower after name is completed
- * - format the summary better, picture? emoji?
+ * Written by: Lillian Ling, Alexandra Zhang Jiang
  */
 
 /* html variables */
@@ -22,21 +18,21 @@ const beeColor = "black";
 const beeBorder = "black";
 const foodColor = "yellow";
 const unitSize = 25;
+const frameRate = 1000/10; // 60 frames per second
 
 /* global variables for game logic */
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
-let firstMove = true;
 let paused = true;
-let xVelocity = 25;
+let xVelocity = unitSize;         // the bee moves to the right at beginning of game
 let yVelocity = 0;
 let foodX;
 let foodY;
-let displayName = "";     // name displayed below game board
-let womanName;  // last name from json file loaded at beginning of game
+let displayName = "";      // name displayed below game board
+let womanName;             // last name from json file loaded at beginning of game
 let womanKownFor;
 let womanSummary;
-
+let intervalTimerId;
 let currWomanNameIdx = 0; 
 let bee = [
     {x:unitSize * 4, y:unitSize*5},
@@ -52,36 +48,34 @@ playBtn.addEventListener("click", resetGame);
 gameStart();
 
 function gameStart(){
-    clearTimeout();
     running = true;
     paused = true;
-    //loadWomenInfo();
-    womanName="grl"
-    womanKownFor = "\t"+"Known for being girlboss";
-    womanSummary = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+    loadWomenInfo();
     nameText.textContent = "Start collecting letters!"
-    createFood();
-    //drawFood();
-    nextTick();
+    clearBoard();
+    createFood(); // initial letter
+ 
+    // repeatedly calls gameLoop after frameRate time has passed
+    intervalTimerId = setInterval(() => {
+        gameLoop();
+    }, frameRate);
 };
 
-function nextTick(){
-    if(running){
-        setTimeout(()=>{
+// updates game state and render state graphics
+function gameLoop() {
+    if (running){
         clearBoard();
-        drawFood();       // draw letter
+        drawFood();
         if (!paused) {
             moveBee();
-        }       // move bee in the grid
-        drawBee();        // draw bee 
-        checkGameOver();  // bee hits a border or name is completed
-        nextTick();
-        }, 100);
+        }
+        drawBee();
+        checkGameOver();
     }
-    else{
+    else {
         displayGameOver();
     }
-};
+}
 
 function clearBoard(){
     ctx.fillStyle = boardBackground;
@@ -99,6 +93,7 @@ function createFood(){
 
 function drawFood(){ 
     ctx.fillStyle = foodColor;
+
     ctx.beginPath();
     ctx.arc(foodX+unitSize/2, foodY+unitSize/2, 16, 0, Math.PI * 2, false);
     ctx.strokeStyle = 'gold';
@@ -107,8 +102,7 @@ function drawFood(){
     ctx.fill();
     ctx.stroke();
     ctx.closePath();
-    
-    //ctx.fillRect(foodX, foodY, unitSize, unitSize);
+
     ctx.font = "25px Chalkduster";
     ctx.fillStyle = "black";
     ctx.fillText(womanName[currWomanNameIdx], foodX+12.5, foodY+25);
@@ -265,6 +259,7 @@ function resetGame(){
     yVelocity = 0;
     currWomanNameIdx = 0;
     displayName = "";
+    flowerFound = false;
     clearBoard();
     bee = [
         {x:unitSize * 4, y:0},
@@ -273,15 +268,14 @@ function resetGame(){
         {x:unitSize, y:0},
         {x:0, y:0}
     ];
-    clearTimeout();
+    clearTimeout(intervalTimerId);
     gameStart();
 };
 
-function _generateRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 function loadWomenInfo() {
+    function _generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
     randomId = _generateRandomNumber(1, 36);
 
     fetch('techwomen.json')
