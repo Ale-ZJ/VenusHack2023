@@ -28,7 +28,7 @@ let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
 let firstMove = true;
 let paused = true;
-let xVelocity = 0;
+let xVelocity = 25;
 let yVelocity = 0;
 let foodX;
 let foodY;
@@ -39,11 +39,11 @@ let womanSummary;
 
 let currWomanNameIdx = 0; 
 let bee = [
-    {x:unitSize * 4, y:0},
-    {x:unitSize * 3, y:0},
-    {x:unitSize * 2, y:0},
-    {x:unitSize, y:0},
-    {x:0, y:0}
+    {x:unitSize * 4, y:unitSize*5},
+    {x:unitSize * 3, y:unitSize*5},
+    {x:unitSize * 2, y:unitSize*5},
+    {x:unitSize, y:unitSize*5},
+    {x:0, y:unitSize*5}
 ]; 
 
 window.addEventListener("keydown", changeDirection);
@@ -52,12 +52,16 @@ playBtn.addEventListener("click", resetGame);
 gameStart();
 
 function gameStart(){
+    clearTimeout();
     running = true;
     paused = true;
-    loadWomenInfo();
+    //loadWomenInfo();
+    womanName="grl"
+    womanKownFor = "\t"+"Known for being girlboss";
+    womanSummary = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
     nameText.textContent = "Start collecting letters!"
     createFood();
-    drawFood();
+    //drawFood();
     nextTick();
 };
 
@@ -205,6 +209,7 @@ function changeDirection(event){
             paused = paused? false : true;
             break;
     }
+    clearTimeout();
 };
 
 
@@ -239,7 +244,7 @@ function checkGameOver(){
 };
 
 function displayGameOver(){
-    ctx.font = "50px MV Boli";
+    ctx.font = "50px Gill Sans";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     if (flowerFound) {
