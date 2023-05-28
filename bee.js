@@ -103,9 +103,9 @@ function drawFood(){
     ctx.stroke();
     ctx.closePath();
 
-    ctx.font = "25px Chalkduster";
+    ctx.font = "25px Darumadrop One";
     ctx.fillStyle = "black";
-    ctx.fillText(womanName[currWomanNameIdx], foodX+12.5, foodY+25);
+    ctx.fillText(womanName[currWomanNameIdx], foodX+10, foodY+25);
 };
 
 function moveBee(){
@@ -182,6 +182,9 @@ function changeDirection(event){
     const goingRight = (xVelocity == unitSize);
     const goingLeft = (xVelocity == -unitSize);
 
+    if (keyPressed == UP || keyPressed == DOWN) {
+        event.preventDefault();
+    }
     switch(true){
         case(keyPressed == LEFT && !goingRight && !paused):
             xVelocity = -unitSize;
@@ -238,7 +241,7 @@ function checkGameOver(){
 };
 
 function displayGameOver(){
-    ctx.font = "50px Gill Sans";
+    ctx.font = "50px Darumadrop One";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     if (flowerFound) {
@@ -262,12 +265,12 @@ function resetGame(){
     flowerFound = false;
     clearBoard();
     bee = [
-        {x:unitSize * 4, y:0},
-        {x:unitSize * 3, y:0},
-        {x:unitSize * 2, y:0},
-        {x:unitSize, y:0},
-        {x:0, y:0}
-    ];
+        {x:unitSize * 4, y:unitSize*5},
+        {x:unitSize * 3, y:unitSize*5},
+        {x:unitSize * 2, y:unitSize*5},
+        {x:unitSize, y:unitSize*5},
+        {x:0, y:unitSize*5}
+    ]; 
     clearTimeout(intervalTimerId);
     gameStart();
 };
