@@ -10,7 +10,7 @@ fetch('techwomen.json')
 
     function search() {
       const query = searchInput.value.toLowerCase();
-      const results = data.filter(item => item.name.toLowerCase().includes(query));
+      const results = data.filter(item => item.id === query);
 
       // Clear previous results
       searchResults.innerHTML = '';

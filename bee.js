@@ -1,8 +1,18 @@
+/**
+ * features/issues:
+ * - bee increases speed after button is pressed
+ * - first few games are "janked"
+ * - add flower after name is completed
+ * - format the summary better, picture? emoji?
+ */
+
 /* html variables */
 const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
 const nameText = document.querySelector("#name");
 const resetBtn = document.querySelector("#resetBtn");
+const knownForText = document.querySelector("#knownFor");
+const summaryText = document.querySelector("#summary");
 
 /* game board constants */
 const gameWidth = gameBoard.width;
@@ -23,7 +33,10 @@ let yVelocity = 0;
 let foodX;
 let foodY;
 let displayName = "";     // name displayed below game board
-let womanName = "Marie Curie";  // last name from json file loaded at beginning of game
+let womanName;  // last name from json file loaded at beginning of game
+let womanKownFor;
+let womanSummary;
+
 let currWomanNameIdx = 0; 
 let bee = [
     {x:unitSize * 4, y:0},
@@ -34,14 +47,14 @@ let bee = [
 ]; 
 
 window.addEventListener("keydown", changeDirection);
-resetBtn.addEventListener("click", resetGame);
+playBtn.addEventListener("click", resetGame);
 
 gameStart();
 
 function gameStart(){
-    running = true; 
+    running = true;
     paused = true;
-    // load women information for the game
+    loadWomenInfo();
     nameText.textContent = "Start collecting letters!"
     createFood();
     drawFood();
@@ -59,7 +72,7 @@ function nextTick(){
         drawBee();        // draw bee 
         checkGameOver();  // bee hits a border or name is completed
         nextTick();
-        }, 75);
+        }, 100);
     }
     else{
         displayGameOver();
@@ -231,7 +244,8 @@ function displayGameOver(){
     ctx.textAlign = "center";
     if (flowerFound) {
         ctx.fillText("FLOWER FOUND!", gameWidth / 2, gameHeight / 2);
-        // how do i display women information only when end-game?
+        knownForText.textContent = womanKownFor;
+        summaryText.textContent = womanSummary;
     } 
     else {
         ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
@@ -241,9 +255,12 @@ function displayGameOver(){
 };
 
 function resetGame(){
-    // loadWomenInfo() to change women name, known_for, summary
+    loadWomenInfo();
     xVelocity = unitSize;
     yVelocity = 0;
+    currWomanNameIdx = 0;
+    displayName = "";
+    clearBoard();
     bee = [
         {x:unitSize * 4, y:0},
         {x:unitSize * 3, y:0},
@@ -255,26 +272,20 @@ function resetGame(){
     gameStart();
 };
 
-
 function _generateRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// TODO: update the global variable for women information
-// loads a women's information into bee.js 
 function loadWomenInfo() {
-    id = generateRandomNumber(1,36);
+    randomId = _generateRandomNumber(1, 36);
 
-    // load the json file
     fetch('techwomen.json')
-        .then(data => {
-            const flowerInfo = document.getElementById('flowerResult')
-
-            // search json file for a given women in stem
-            const flowers = data.filter(item => item.id == id);
-
+        .then(response => response.json())
+        .then(womenData => {
+            const womanMatch = womenData.find(item => item.id == randomId);
             
+            womanName = womanMatch.name;
+            womanKownFor = womanMatch.known_for;
+            womanSummary = womanMatch.Bio.Summary;
         });
-
-
 }
