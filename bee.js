@@ -1,8 +1,18 @@
+/**
+ * features/issues:
+ * - bee increases speed after button is pressed
+ * - first few games are "janked"
+ * - add flower after name is completed
+ * - format the summary better, picture? emoji?
+ */
+
 /* html variables */
 const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
 const nameText = document.querySelector("#name");
 const resetBtn = document.querySelector("#resetBtn");
+const knownForText = document.querySelector("#knownFor");
+const summaryText = document.querySelector("#summary");
 
 /* game board constants */
 const gameWidth = gameBoard.width;
@@ -13,9 +23,6 @@ const beeBorder = "black";
 const foodColor = "lightpink";
 const unitSize = 25;
 
-/* Load JSON women in stem data to const variable */
-// const womenData = require('./techwomen.json');
-
 /* global variables for game logic */
 let running = false;     // for keeping track of end-game
 let flowerFound = false; // for keeping track of finding all the letters of a women in STEM
@@ -25,7 +32,6 @@ let yVelocity = 0;
 let foodX;
 let foodY;
 let displayName = "";     // name displayed below game board
-
 let womanName;  // last name from json file loaded at beginning of game
 let womanKownFor;
 let womanSummary;
@@ -40,7 +46,7 @@ let bee = [
 ]; 
 
 window.addEventListener("keydown", changeDirection);
-resetBtn.addEventListener("click", resetGame);
+playBtn.addEventListener("click", resetGame);
 
 gameStart();
 
@@ -62,7 +68,7 @@ function nextTick(){
         drawBee();        // draw bee 
         checkGameOver();  // bee hits a border or name is completed
         nextTick();
-        }, 75);
+        }, 100);
     }
     else{
         displayGameOver();
@@ -221,6 +227,8 @@ function displayGameOver(){
     ctx.textAlign = "center";
     if (flowerFound) {
         ctx.fillText("FLOWER FOUND!", gameWidth / 2, gameHeight / 2);
+        knownForText.textContent = womanKownFor;
+        summaryText.textContent = womanSummary;
     } 
     else {
         ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
@@ -235,6 +243,7 @@ function resetGame(){
     yVelocity = 0;
     currWomanNameIdx = 0;
     displayName = "";
+    clearBoard();
     bee = [
         {x:unitSize * 4, y:0},
         {x:unitSize * 3, y:0},
@@ -250,12 +259,13 @@ function _generateRandomNumber(min, max) {
 }
 
 function loadWomenInfo() {
-    id = _generateRandomNumber(1, 36);
+    randomId = _generateRandomNumber(1, 36);
 
     fetch('techwomen.json')
         .then(response => response.json())
         .then(womenData => {
-            const womanMatch = womenData.find(item => item.id === id);
+            const womanMatch = womenData.find(item => item.id == randomId);
+            
             womanName = womanMatch.name;
             womanKownFor = womanMatch.known_for;
             womanSummary = womanMatch.Bio.Summary;
