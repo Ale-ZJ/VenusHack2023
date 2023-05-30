@@ -1096,5 +1096,68 @@
 		"media": "",
 		"image_path": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Annie_Easley_in_NASA.jpg",
 		"image_width": "150"
+	},
+	{
+		"id": "37",
+		"name": "Lillian Ling",
+		"known_for": "Writing bee in STEM game >:)",
+		"Bio": {
+			"Summary": "Lillian is a student at the University of California, Irvine majoring in Computer Science and Engineering. She was a lab technician at IEEE at UCI's Open Project Space Program where she helped students build and troublshoot embedded system projects.",
+			"Origin": "Sonoma, California, USA",
+			"DOB": "12 October 2001",
+			"DOD": "NA"
+		},
+		"Fields": [
+			{
+				"Mathematics": false
+			},
+			{
+				"Computer Science": true
+			}
+		],
+		"Legacy": "bee in STEM",
+		"Tags": [
+			"Lillian Ling",
+			"Computer Science and Engineering",
+			"Open Project Space",
+			"Embedded System",
+			"IEEE at UCI"
+		],
+		"url": "https://www.linkedin.com/in/lillian-ling/",
+		"media": "",
+		"image_path": "",
+		"image_width": "0"
+	},
+	{
+		"id": "38",
+		"name": "Alexandra Zhang Jiang",
+		"known_for": "Writing bee in STEM game >:)",
+		"Bio": {
+			"Summary": "Alexadra is a student at the University of California, Irvine majoring in Computer Science and Engineering. She is involved in IEEE at UCI.",
+			"Origin": "San Miguelito, Panama City, Panama",
+			"DOB": "28 October 2001",
+			"DOD": "NA"
+		},
+		"Fields": [
+			{
+				"Mathematics": false
+			},
+			{
+				"Computer Science": true
+			}
+		],
+		"Legacy": "bee in STEM",
+		"Tags": [
+			"Alexandra Zhang Jiang",
+			"Computer Science and Engineering",
+			"Open Project Space",
+			"Embedded System",
+			"IEEE at UCI",
+			"Avionics System"
+		],
+		"url": "https://www.linkedin.com/in/alezj/",
+		"media": "",
+		"image_path": "",
+		"image_width": "0"
 	}
 ]

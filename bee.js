@@ -283,7 +283,7 @@ function loadWomenInfo() {
     function _generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
-    randomId = _generateRandomNumber(1, 36);
+    randomId = _generateRandomNumber(1, 38);
 
     fetch('techwomen.json')
         .then(response => response.json())
